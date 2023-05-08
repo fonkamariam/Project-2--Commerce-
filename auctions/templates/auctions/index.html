@@ -1,7 +1,44 @@
 {% extends "auctions/layout.html" %}
-
 {% block body %}
-    <h2>Active Listings</h2>
 
-    TODO
+
+<style>
+    .sold{
+        color: red;
+    }
+.l1{
+    border-style:inset;
+    border-width: medium;
+    border-color: blue;
+
+    width: 60%;
+        display: block;
+        margin-left: 3px;
+        margin-top: 3px;
+        padding: 1px;
+}
+</style>
+
+{% for list in listings %}
+<div class="l1">
+    {{list.title}} <br>
+    {% if list.imageUrl %}
+    <img src="<{{list.image}}>"> <br>
+    {% else %}
+    {% endif %}
+    {{list.description}} <br> 
+    Starting bid= {{list.starting_bid}} <br> 
+    {% if list.category %}
+    category:{{list.category}}
+    {% else %}
+    {% endif %} <br>
+    
+    
+    <a href="/{{list.id}}"> Show </a>
+
+
+</div>
+    {% endfor %}
+
+
 {% endblock %}

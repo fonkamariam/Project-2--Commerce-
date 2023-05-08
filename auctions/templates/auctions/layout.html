@@ -21,6 +21,13 @@
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
             {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'create' %}">Create New Listing</a>
+            </li>
+            {% else %}
+
+            {% endif %}
+            {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                 </li>
@@ -32,6 +39,16 @@
                     <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
             {% endif %}
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    
+                </li>
+            {% else %}
+            {% endif %}
+            <li class="nav-item">
+                
+            </li>
+            
         </ul>
         <hr>
         {% block body %}

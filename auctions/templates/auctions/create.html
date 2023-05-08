@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<form action="{% url 'create' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <input class="form-control" autofocus type="text" name="title" placeholder="Title of the item" required>
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="description" placeholder="Type Description of the Item" required> 
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="url" name="imageUrl" placeholder="Enter a Url for the image of the Item" >
+    </div>
+    <div class="form-group">
+        <input class="form-control" name="starting_bid" placeholder="Enter Starting Bid" required>
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="category" placeholder="Category of the Item">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Post">
+</form>
+{% endblock %}
