@@ -21,7 +21,22 @@ float: right;
 {% else %}
 {% endif %} <br>
 <div class="creation">Auction Created By {{l.owner}}</div><br><br><br>
-
+{% if message_for_watchlist == "add" %}
+<form action="{% url 'add_to_watchlist' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" value="{{l.id}}" name="auc">
+    <input class="btn btn-primary" type="submit" value="Add To Watchlist">
+</form>
+{% else %}
+{% endif %}
+{% if message_for_watchlist == "remove" %}
+<form action="{% url 'remove_from_watchlist' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" value="{{l.id}}" name="auc">
+    <input class="btn btn-primary" type="submit" value="Remove from Watchlist">
+</form>
+{% else %}
+{% endif %}
 <a href="{% url 'index' %}">Back to Listing</a>
 {% endblock %}
 

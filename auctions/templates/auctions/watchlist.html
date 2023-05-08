@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+{% block body %} <br>
+<div>
+    {% if watchlist %}
+    {%for p in watchlist %}
+    <div>
+        <a href="/{{p.id}}"> {{p}}</a></li>
+    </div>
+    {% endfor %}
+    {% else %}
+    <strong>{{message}}</strong>
+    {% endif %} 
+</div>
+{% endblock %}
+

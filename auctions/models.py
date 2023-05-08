@@ -16,3 +16,8 @@ class Listing(models.Model):
     active=models.BooleanField(default=True)
     def __str__(self):
         return f"{self.id}) {self.title}"
+class Watchlist(models.Model):
+    own= models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="userWL")
+    oneauction=models.ManyToManyField(Listing, related_name="oneauction", blank=True, null=True)
+    def __str__(self):
+        return f"{self.own}'s Listing"  

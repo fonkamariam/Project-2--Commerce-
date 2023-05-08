@@ -3,9 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User,Listing
+from .models import User,Listing,Watchlist
 from .models import User
 from django.contrib.auth.decorators import login_required
+from django.db.utils import OperationalError 
 
 
 def index(request):
@@ -13,8 +14,21 @@ def index(request):
     return render(request, "auctions/index.html",{"listings":l})
 @login_required
 def get(request,x): 
+    list_for_watchlist=[]
     l=Listing.objects.get(pk=x)
-    return render(request, "auctions/singlepage.html",{"l":l})
+    curr= request.user
+    try:
+        wanted_watchlist=Watchlist.objects.get(own=curr)
+    except Watchlist.DoesNotExist:
+        wanted_watchlist= Watchlist.objects.create(own=curr)    
+        wanted_watchlist.save()     
+    fonka=wanted_watchlist.oneauction.iterator()
+    for f in fonka:
+        list_for_watchlist.append(f.id)
+    message="add"
+    if x in list_for_watchlist:
+        message="remove"
+    return render(request, "auctions/singlepage.html",{"l":l,"message_for_watchlist":message})
 @login_required
 def create(request):
     if request.method == "POST":
@@ -24,6 +38,39 @@ def create(request):
         return HttpResponseRedirect(reverse("index"))
     return render (request, "auctions/create.html")
 
+@login_required
+def show_watchlist(request):
+    curr=request.user
+    try:
+        wanted_watchlist=Watchlist.objects.get(own=curr)
+    except Watchlist.DoesNotExist:
+        wanted_watchlist= Watchlist.objects.create(own=curr)    
+        wanted_watchlist.save()
+    message="No Auction Added Yet."
+    return render (request, "auctions/watchlist.html",{"watchlist":wanted_watchlist.oneauction.all,"message":message})
+@login_required
+def add_to_watchlist(request):
+    curr=request.user 
+    if request.method == "POST":
+        auc_id= request.POST["auc"]
+        wanted_auciton=Listing.objects.get(pk= auc_id)
+        try:
+            wanted_watchlist=Watchlist.objects.get(own=curr)
+            wanted_watchlist.oneauction.add(wanted_auciton)
+        except Watchlist.DoesNotExist:
+            NWL= Watchlist.objects.create(own=curr)    
+            NWL.oneauction.add(wanted_auciton)
+            NWL.save()
+        return HttpResponseRedirect(reverse("get",kwargs={"x":wanted_auciton.id}))   
+@login_required
+def remove_from_watchlist(request):
+    curr=request.user 
+    if request.method == "POST":
+        auc_id= request.POST["auc"]
+        wanted_auciton=Listing.objects.get(pk= auc_id)    
+        wanted_watchlist=Watchlist.objects.get(own=curr)
+        wanted_watchlist.oneauction.remove(wanted_auciton)
+    return HttpResponseRedirect(reverse("get",kwargs={"x":wanted_auciton.id}))
 def login_view(request):
     if request.method == "POST":
 
