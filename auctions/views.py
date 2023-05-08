@@ -71,6 +71,19 @@ def remove_from_watchlist(request):
         wanted_watchlist=Watchlist.objects.get(own=curr)
         wanted_watchlist.oneauction.remove(wanted_auciton)
     return HttpResponseRedirect(reverse("get",kwargs={"x":wanted_auciton.id}))
+def categories(request):
+    l=Listing.objects.all()
+    s = set()
+    for x in l:
+        s.add(x.category)
+    return render(request,"auctions/category.html",{"categories": s})
+def get_by_category(request, category):
+    l=Listing.objects.all()
+    a=[]
+    for x in l:
+        if x.category == category:
+            a.append(x.title)
+    return render(request,"auctions/categorylist.html",{"categories": a})
 def login_view(request):
     if request.method == "POST":
 
