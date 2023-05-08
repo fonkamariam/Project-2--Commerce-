@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+<style>
+.bid{width: 10%;
+    padding: 4px 12px;
+    margin: 4px 0;
+    }
+.creation{
+float: right;
+}
+</style>
+<h1>Name:{{l.title}}</h1>
+<div>Description: {{l.description}}</div>
+{% if l.imageUrl %}
+<div><img src="<{{l.imageUrl}}>" alt="{{l.title}}"></div>
+{% else%}
+{% endif %}
+<div>Starting Bid: ${{l.starting_bid}}</div>
+{%if l.category%}
+<div>Category: {{l.category}}</div>
+{% else %}
+{% endif %} <br>
+<div class="creation">Auction Created By {{l.owner}}</div><br><br><br>
+
+<a href="{% url 'index' %}">Back to Listing</a>
+{% endblock %}
+

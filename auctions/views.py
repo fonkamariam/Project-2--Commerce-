@@ -11,7 +11,10 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     l= Listing.objects.all()
     return render(request, "auctions/index.html",{"listings":l})
-
+@login_required
+def get(request,x): 
+    l=Listing.objects.get(pk=x)
+    return render(request, "auctions/singlepage.html",{"l":l})
 @login_required
 def create(request):
     if request.method == "POST":
