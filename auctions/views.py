@@ -18,6 +18,7 @@ def get(request,x):
     C= Comment.objects.all()
     list_for_comments=[]
     if request.method == "POST":
+        # for comments
         curr=request.user
         wanted_auction= request.POST["auc"]
         want=Listing.objects.get(pk= wanted_auction)
