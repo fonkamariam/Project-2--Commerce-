@@ -3,10 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User,Listing,Watchlist
+from .models import User,Listing,Watchlist,Comment
 from .models import User
 from django.contrib.auth.decorators import login_required
-from django.db.utils import OperationalError 
 
 
 def index(request):
@@ -16,19 +15,48 @@ def index(request):
 def get(request,x): 
     list_for_watchlist=[]
     l=Listing.objects.get(pk=x)
-    curr= request.user
-    try:
-        wanted_watchlist=Watchlist.objects.get(own=curr)
-    except Watchlist.DoesNotExist:
-        wanted_watchlist= Watchlist.objects.create(own=curr)    
-        wanted_watchlist.save()     
-    fonka=wanted_watchlist.oneauction.iterator()
-    for f in fonka:
-        list_for_watchlist.append(f.id)
-    message="add"
-    if x in list_for_watchlist:
-        message="remove"
-    return render(request, "auctions/singlepage.html",{"l":l,"message_for_watchlist":message})
+    C= Comment.objects.all()
+    list_for_comments=[]
+    if request.method == "POST":
+        curr=request.user
+        wanted_auction= request.POST["auc"]
+        want=Listing.objects.get(pk= wanted_auction)
+        comment_from_form=request.POST["com"]
+        listt= Comment.objects.create(person= curr, comment = comment_from_form,auction= want)
+        listt.save()
+        for y in C:
+            if y.auction.id == x:
+                list_for_comments.append(y)
+        try:
+            wanted_watchlist=Watchlist.objects.get(own=curr)
+        except Watchlist.DoesNotExist:
+            wanted_watchlist= Watchlist.objects.create(own=curr)    
+            wanted_watchlist.save()     
+        fonka=wanted_watchlist.oneauction.iterator()
+        for f in fonka:
+            list_for_watchlist.append(f.id)
+        message="add"
+        if x in list_for_watchlist:
+            message="remove"
+        return render(request, "auctions/singlepage.html",{"Comments":list_for_comments,"l":l,"message_for_watchlist":message})
+    if request.method == "GET":
+        curr=request.user
+        # Fetching all comments
+        for y in C:
+            if y.auction.id == x:
+                list_for_comments.append(y)
+        try:
+            wanted_watchlist=Watchlist.objects.get(own=curr)
+        except Watchlist.DoesNotExist:
+            wanted_watchlist= Watchlist.objects.create(own=curr)    
+            wanted_watchlist.save()     
+        fonka=wanted_watchlist.oneauction.iterator()
+        for f in fonka:
+            list_for_watchlist.append(f.id)
+        message="add"
+        if x in list_for_watchlist:
+            message="remove"
+        return render(request, "auctions/singlepage.html",{"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
 @login_required
 def create(request):
     if request.method == "POST":

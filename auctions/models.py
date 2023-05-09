@@ -21,3 +21,9 @@ class Watchlist(models.Model):
     oneauction=models.ManyToManyField(Listing, related_name="oneauction", blank=True, null=True)
     def __str__(self):
         return f"{self.own}'s Listing"  
+class Comment(models.Model):
+    person=models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user1")
+    comment=models.TextField()
+    auction=models.ForeignKey(Listing ,on_delete=models.CASCADE)
+    def __str__(self):
+        return f" comment on {self.auction.title} by {self.person}"

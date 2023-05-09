@@ -1,5 +1,7 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
+
+       
 <style>
 .bid{width: 10%;
     padding: 4px 12px;
@@ -12,7 +14,7 @@ float: right;
 <h1>Name:{{l.title}}</h1>
 <div>Description: {{l.description}}</div>
 {% if l.imageUrl %}
-<div><img src="<{{l.imageUrl}}>" alt="{{l.title}}"></div>
+<div><img src="<{{l.imageUrl}}>" alt="{{l.title}}" width="25" height="25"></div>
 {% else%}
 {% endif %}
 <div>Starting Bid: ${{l.starting_bid}}</div>
@@ -37,6 +39,49 @@ float: right;
 </form>
 {% else %}
 {% endif %}
+<div class="row d-flex justify-content-left">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+        <div class="card-body p-4">
+          <div class="form-outline mb-4">
+            <form id="form_for_comment" action="{% url 'get' l.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" id="commentt" class="form-control" placeholder="Type comment..." name="com" />
+            <input type="hidden" value="{{l.id}}" name="auc">
+            <button class="btn btn-primary" type="submit" id="submitbutton" disabled> Comment</button>
+        </form>
+        <script>
+            const text= document.getElementById("commentt")
+            const submitt= document.getElementById("submitbutton")
+            text.addEventListener('keyup',(e)=>{
+                const value= e.currentTarget.value;
+                let result= value.trim();
+                if ( result == "" ){
+                    submitt.disabled=true;
+                }else{
+                    submitt.disabled=false;
+                }
+            });
+            </script>
+    </div>
+    {% if Comments %}
+    {% for c in Comments %}
+          <div class="card mb-4">
+            <div class="card-body">
+              <p>{{c.comment}}</p>
+              <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <p class="small mb-0 ms-2">Commented by {{c.person}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    {% endfor %}
+    {% else %}
+    {% endif %}
+  
+
+
 <a href="{% url 'index' %}">Back to Listing</a>
 {% endblock %}
 
