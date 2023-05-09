@@ -29,6 +29,7 @@ float: right;
     <input type="hidden" value="{{l.id}}" name="auc">
     <input class="btn btn-primary" type="submit" value="Add To Watchlist">
 </form>
+
 {% else %}
 {% endif %}
 {% if message_for_watchlist == "remove" %}
@@ -39,6 +40,15 @@ float: right;
 </form>
 {% else %}
 {% endif %}
+<br>    
+
+<form action="{% url 'add_bid' %}" method="post">
+    {% csrf_token %}
+    <input  type="hidden" value="{{l.id}}" name="auc">
+    <input id="bid" type="number" min="{{min_value}}" max="10000000000000" placeholder="Current Bid is {{highest_bid}}" name="bid">
+    <input id="submitbid" class="btn btn-primary"  type="submit" disabled value="Place Bid">
+</form>
+
 <div class="row d-flex justify-content-left">
     <div class="col-md-8 col-lg-6">
       <div class="card shadow-0 border" style="background-color: #f0f2f5;">
@@ -60,6 +70,17 @@ float: right;
                     submitt.disabled=true;
                 }else{
                     submitt.disabled=false;
+                }
+            });
+            const num= document.getElementById("bid")
+            const subm= document.getElementById("submitbid")
+            num.addEventListener('keyup',(e)=>{
+                const value= e.currentTarget.value;
+                let result= value.trim();
+                if ( result == "" ){
+                    submitbid.disabled=true;
+                }else{
+                    submitbid.disabled=false;
                 }
             });
             </script>

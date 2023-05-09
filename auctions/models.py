@@ -27,3 +27,9 @@ class Comment(models.Model):
     auction=models.ForeignKey(Listing ,on_delete=models.CASCADE)
     def __str__(self):
         return f" comment on {self.auction.title} by {self.person}"
+class Bid(models.Model):
+    bidder= models.ForeignKey( User, on_delete=models.CASCADE)
+    bid= models.IntegerField()
+    auctionbided=models.ForeignKey( Listing ,on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return f"{self.bidder} bided on {self.auctionbided}"

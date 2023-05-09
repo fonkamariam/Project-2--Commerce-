@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User,Listing,Watchlist,Comment
+from .models import User,Listing,Watchlist,Comment,Bid
 from .models import User
 from django.contrib.auth.decorators import login_required
 
@@ -13,10 +13,13 @@ def index(request):
     return render(request, "auctions/index.html",{"listings":l})
 @login_required
 def get(request,x): 
+    B=Bid.objects.all()
     list_for_watchlist=[]
     l=Listing.objects.get(pk=x)
     C= Comment.objects.all()
     list_for_comments=[]
+    list_for_bids=[]
+    dic={}
     if request.method == "POST":
         # for comments
         curr=request.user
@@ -57,7 +60,20 @@ def get(request,x):
         message="add"
         if x in list_for_watchlist:
             message="remove"
-        return render(request, "auctions/singlepage.html",{"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
+        for b in B:
+            if b.auctionbided.id==x:
+                list_for_bids.append(b)
+        if list_for_bids:
+            for z in list_for_bids:
+                dic.update({z.bidder: z.bid})
+            Highest_bidder=max(dic, key= lambda x:dic[x])
+            Highest_bid= dic[Highest_bidder]
+            min_bid_to_be_placed= Highest_bid + 1
+            return render(request,"auctions/singlepage.html",{"min_value":min_bid_to_be_placed,"highest_bidder":Highest_bidder,"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
+        Highest_bid= l.starting_bid
+        return render(request,"auctions/singlepage.html",{"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
+
+       
 @login_required
 def create(request):
     if request.method == "POST":
@@ -113,6 +129,14 @@ def get_by_category(request, category):
         if x.category == category:
             a.append(x.title)
     return render(request,"auctions/categorylist.html",{"categories": a})
+def add_bid(request): 
+    if request.method == "POST":
+        curr=request.user
+        w= request.POST["auc"]
+        wanted_auciton=Listing.objects.get(pk= w)
+        create_bid= Bid.objects.create(bidder=curr,bid=request.POST["bid"],auctionbided=wanted_auciton)
+        create_bid.save()
+    return HttpResponseRedirect(reverse("get",kwargs={"x":wanted_auciton.id}))    
 def login_view(request):
     if request.method == "POST":
 
