@@ -60,6 +60,7 @@ def get(request,x):
         message="add"
         if x in list_for_watchlist:
             message="remove"
+        # For bids
         for b in B:
             if b.auctionbided.id==x:
                 list_for_bids.append(b)
