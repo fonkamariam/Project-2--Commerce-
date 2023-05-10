@@ -18,8 +18,11 @@
         padding: 1px;
 }
 </style>
-
+{% if listings %}   
 {% for list in listings %}
+{% if list.bought == curr %}
+<h1>Congradulations you have won the Auction( {{list.title}})!</h1>
+{% else %}
 <div class="l1">
     {{list.title}} <br>
     {% if list.imageUrl %}
@@ -31,14 +34,20 @@
     {% if list.category %}
     category:{{list.category}}
     {% else %}
-    {% endif %} <br>
+    {% endif %}<br>
     
-    
+    {% if list.active == False %}
     <a href="/{{list.id}}"> Show </a>
+    {% else %}
+    <div style="color: red;">Sold</div>
+    {% endif %}
 
 
 </div>
+    {% endif %}
     {% endfor %}
-
+{% else %}
+No listings.
+{% endif %}
 
 {% endblock %}

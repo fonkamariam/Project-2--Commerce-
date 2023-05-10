@@ -6,6 +6,8 @@
     {%for category in categories %}
     {% if category %}
     <li> <a href="/{{category.id}}"> {{category}} </a></li>
+    {% else %}
+    <div>No categories</div>
     {% endif %}
     {% endfor %}
 </ul>

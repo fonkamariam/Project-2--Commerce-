@@ -7,10 +7,15 @@ from .models import User,Listing,Watchlist,Comment,Bid
 from .models import User
 from django.contrib.auth.decorators import login_required
 
+def error_404(request,exception):
+    return render(request, "auctions/notfound.html")
 
 def index(request):
+    curr= request.user
+    if curr:
+        pass
     l= Listing.objects.all()
-    return render(request, "auctions/index.html",{"listings":l})
+    return render(request, "auctions/index.html",{"curr":curr,"listings":l,})
 @login_required
 def get(request,x): 
     B=Bid.objects.all()
@@ -64,15 +69,22 @@ def get(request,x):
         for b in B:
             if b.auctionbided.id==x:
                 list_for_bids.append(b)
+        show_bid="True"
+        if curr == l.owner:
+            show_bid="False"
         if list_for_bids:
             for z in list_for_bids:
                 dic.update({z.bidder: z.bid})
             Highest_bidder=max(dic, key= lambda x:dic[x])
             Highest_bid= dic[Highest_bidder]
             min_bid_to_be_placed= Highest_bid + 1
-            return render(request,"auctions/singlepage.html",{"min_value":min_bid_to_be_placed,"highest_bidder":Highest_bidder,"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
+            show_bid="True"
+            if curr == l.owner:
+                show_bid="False"
+                return render(request,"auctions/singlepage.html",{"show_bid":show_bid,"Bids":list_for_bids,"highest_bidder":Highest_bidder,"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
+            return render(request,"auctions/singlepage.html",{"show_bid":show_bid,"min_value":min_bid_to_be_placed,"highest_bidder":Highest_bidder,"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
         Highest_bid= l.starting_bid
-        return render(request,"auctions/singlepage.html",{"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
+        return render(request,"auctions/singlepage.html",{"show_bid":show_bid,"highest_bid":Highest_bid,"message":message,"l":l,"message_for_watchlist":message,"Comments":list_for_comments})
 
        
 @login_required
@@ -138,6 +150,28 @@ def add_bid(request):
         create_bid= Bid.objects.create(bidder=curr,bid=request.POST["bid"],auctionbided=wanted_auciton)
         create_bid.save()
     return HttpResponseRedirect(reverse("get",kwargs={"x":wanted_auciton.id}))    
+def close_auction(request):
+    if request.method == "POST":
+        B=Bid.objects.all()
+        curr= request.user
+        wanted_auction= request.POST["auc"]
+        want=Listing.objects.get(pk= wanted_auction)
+        title= want.title
+        list_bid=[]
+        dic={}
+        for b in B:
+            if b.auctionbided.title == want.title:
+                list_bid.append(b)
+        if list_bid:
+            message=""
+            for z in list_bid:
+                dic.update({z.bidder: z.bid})
+            name=max(dic, key= lambda x:dic[x])
+            name_bid= dic[name]
+            want.bought= name
+            want.active= True
+            want.save()
+            return render(request, "auctions/closed_auction.html",{"auction":title ,"name":name,"price":name_bid})
 def login_view(request):
     if request.method == "POST":
 

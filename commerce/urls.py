@@ -20,3 +20,4 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("auctions.urls"))
 ]
+handler404= 'auctions.views.error_404'

@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if message %}
+<h1>{{message}}</h1>
+{% else %}
+<div>{{auciton}} going once, twice..</div> <br>
+<h1>Sold</h1> <br>
+<div>{{auction}} sold to {{name}} at a price of ${{price}}</div>
+{% endif %}
+{% endblock %}

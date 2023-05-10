@@ -41,14 +41,36 @@ float: right;
 {% else %}
 {% endif %}
 <br>    
-
+{% if show_bid == "True" %}
 <form action="{% url 'add_bid' %}" method="post">
     {% csrf_token %}
     <input  type="hidden" value="{{l.id}}" name="auc">
     <input id="bid" type="number" min="{{min_value}}" max="10000000000000" placeholder="Current Bid is {{highest_bid}}" name="bid">
     <input id="submitbid" class="btn btn-primary"  type="submit" disabled value="Place Bid">
 </form>
+{% else %}
 
+{% if Bids %}
+Bids on {{l.title}} So Far...
+<br><br>
+{% for bid in Bids %}
+    {{bid.bidder}} - ${{bid.bid}}
+    <br>
+{% endfor %}
+<br>
+<form action="{% url 'close_auction' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" value="{{l.id}}" name="auc">
+    <input type="hidden" id="buy" value="{{l.active}}" name="bought">
+    <input id="submit_close_auction" class="btn btn-primary" type="submit"  value="Close to the Highest Bidder">
+</form>
+{% else %}
+No bids have been placed on the current auciton so far. <br>
+There must be at least a single bid to close the auction.
+
+{% endif %}
+
+{% endif %}
 <div class="row d-flex justify-content-left">
     <div class="col-md-8 col-lg-6">
       <div class="card shadow-0 border" style="background-color: #f0f2f5;">
@@ -81,6 +103,17 @@ float: right;
                     submitbid.disabled=true;
                 }else{
                     submitbid.disabled=false;
+                }
+            });
+            const b = document.getElementById("buy")
+            const c_a= document.getElementById("submit_close_auction")
+            c_a.addEventListener('click',(e)=>{
+                const value= e.currentTarget.value;
+                
+                if ( value == "True" ){
+                    c_a.disabled=true;
+                }else{
+                    c_a.disabled=false;
                 }
             });
             </script>

@@ -4,7 +4,7 @@
     {% if watchlist %}
     {%for p in watchlist %}
     <div>
-        <a href="/{{p.id}}"> {{p}}</a></li>
+        <a href="/{{p.id}}"> {{p.title}}</a></li>
     </div>
     {% endfor %}
     {% else %}

@@ -1,0 +1,12 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if h %}
+
+{%else %}
+<h1> Unavailiable</h1>
+<div>
+    It has been sold to the highest bidder.
+</div>
+{% endif %}
+{% endblock %}
