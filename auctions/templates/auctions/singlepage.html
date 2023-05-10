@@ -14,7 +14,7 @@ float: right;
 <h1>Name:{{l.title}}</h1>
 <div>Description: {{l.description}}</div>
 {% if l.imageUrl %}
-<div><img src="<{{l.imageUrl}}>" alt="{{l.title}}" width="25" height="25"></div>
+<div><img src="<{{l.imageUrl}}>" alt="{{l.title}}" class="img-thumbnail"></div>
 {% else%}
 {% endif %}
 <div>Starting Bid: ${{l.starting_bid}}</div>
