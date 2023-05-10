@@ -11,7 +11,7 @@ In this products you can click on the "Show" icon to see a detailed information 
 If you want to sell a product of your own, you can click the "Create New Listing" icon to provide information about your prodcut.
 After creating your own lising, you will have an option to close the auction to the highest bidder, if any are placed, and sell the product. \
 The "Categories" icon will direct you to a page where all the prodcuts are categorized according to their Categories.\
-The "Watchlist" icon will allow you to see the products you have added to your watchlist(if any).\
+The "Watchlist" icon will allow you to see the products you have added to your watchlist(if any).
 
 ### Where to get Help
 You can contact me by my email address fonkamariam@gmail.com or Telegram Account name @Fonka17.
