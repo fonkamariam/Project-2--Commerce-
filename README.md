@@ -1,12 +1,12 @@
 # Project-2--Commerce-
 # How to Install and Run
-Download the distribution code from Download the distribution code from https://github.com/fonkamariam/Project-2--Commerce-/archive/refs/heads/master.zip and unzip it in your workspace.
-In your terminal, cd into the commerce directory.
-Run "python manage.py makemigrations auctions" to make migrations for the auctions app.
-Run "python manage.py migrate" to apply migrations to your database.
-Run "python manage.py runserver" which will provide a server address.
-Open the server address to run the application on your browser.
-CTRL-BREAK will allow you to Quit the server.
+Download the distribution code from Download the distribution code from https://github.com/fonkamariam/Project-2--Commerce-/archive/refs/heads/master.zip and unzip it in your workspace.<br>
+In your terminal, cd into the commerce directory.<br>
+Run "python manage.py makemigrations auctions" to make migrations for the auctions app.<br>
+Run "python manage.py migrate" to apply migrations to your database.<br>
+Run "python manage.py runserver" which will provide a server address.<br>
+Open the server address to run the application on your browser.<br>
+CTRL-BREAK will allow you to Quit the server.<br>
 ## What the Website does
 This website is an eBay-like e-commerce auction site that allows users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”
 ## Why it is useful
